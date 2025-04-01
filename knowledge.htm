@@ -1,403 +1,464 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Leitner QUIZ</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Leitner QUIZ</title>
 
-  <!-- External scripts -->
-  <script src="./knowledgeBaseJAPANESE.js"></script>
-  <script src="./Storage.js"></script>
-  <script src="./Algorithm.js"></script>
-  <script src="./AIPartner.js"></script>
-  <script src="./QuestionMapper.js"></script>
-  <script src="./ExportingUX.js"></script>
-  <script src="./FeedbackQueue.js"></script>
+        <!-- External scripts -->
+        <script src="./knowledgeBaseJAPANESE.js"></script>
+        <script src="./Storage.js"></script>
+        <script src="./Algorithm.js"></script>
+        <script src="./AIPartner.js"></script>
+        <script src="./QuestionMapper.js"></script>
+        <script src="./ExportingUX.js"></script>
+        <script src="./FeedbackQueue.js"></script>
 
-  <!-- CSS Styles -->
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+        <!-- CSS Styles -->
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', Roboto, sans-serif;
+                background: #f0f2f5;
+                color: #333;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+            }
 
-    header {
-      background-color: #4A90E2;
-      color: white;
-      width: 100%;
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      position: relative;
-    }
+            header {
+                background-color: #4a90e2;
+                color: white;
+                width: 100%;
+                padding: 20px 40px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                position: relative;
+            }
 
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      flex: 1;
-    }
+            header h1 {
+                margin: 0;
+                font-size: 2rem;
+                flex: 1;
+            }
 
-    .header-buttons {
-      display: flex;
-      gap: 10px;
-    }
+            .header-buttons {
+                display: flex;
+                gap: 10px;
+            }
 
-    .header-buttons button {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 8px 12px;
-      font-size: 0.9rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+            .header-buttons button {
+                background: rgba(255, 255, 255, 0.15);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background 0.3s ease, transform 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
 
-    .header-buttons button:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-1px);
-    }
+            .header-buttons button:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-1px);
+            }
 
-    .container {
-      background: white;
-      margin-top: 30px;
-      padding: 20px;
-      width: 90%;
-      max-width: 500px;
-      border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: all 0.3s ease;
-    }
+            .container {
+                background: white;
+                margin-top: 30px;
+                padding: 20px;
+                width: 90%;
+                max-width: 500px;
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                transition: all 0.3s ease;
+            }
 
-    p {
-      margin: 20px 0;
-      font-size: 1.2rem;
-    }
+            p {
+                margin: 20px 0;
+                font-size: 1.2rem;
+            }
 
-    #question {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #333;
-    }
+            #question {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #333;
+            }
 
-    #answer {
-      color: #4A90E2;
-      font-size: 1rem;
-      margin-top: 15px;
-    }
+            #answer {
+                color: #4a90e2;
+                font-size: 1rem;
+                margin-top: 15px;
+            }
 
-    button {
-      background-color: #4A90E2;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      margin: 10px 5px;
-      border-radius: 5px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
+            button {
+                background-color: #4a90e2;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                margin: 10px 5px;
+                border-radius: 5px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
 
-    button:hover {
-      background-color: #357ABD;
-      transform: translateY(-2px);
-    }
+            button:hover {
+                background-color: #357abd;
+                transform: translateY(-2px);
+            }
 
-    button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
+            button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
 
-    .buttons-group {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
+            .buttons-group {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 20px;
+            }
 
-    .performance {
-      text-align: left;
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: #666;
-    }
+            .performance {
+                text-align: left;
+                margin-top: 20px;
+                font-size: 0.9rem;
+                color: #666;
+            }
 
-    .message {
-      font-size: 0.9rem;
-      color: #e74c3c;
-      margin-top: 15px;
-      display: none;
-    }
+            .message {
+                font-size: 0.9rem;
+                color: #e74c3c;
+                margin-top: 15px;
+                display: none;
+            }
 
-    footer {
-      margin-top: auto;
-      padding: 20px 0;
-      font-size: 0.8rem;
-      color: #aaa;
-    }
+            footer {
+                margin-top: auto;
+                padding: 20px 0;
+                font-size: 0.8rem;
+                color: #aaa;
+            }
 
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #4A90E2;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-      display: none;
-    }
+            .loader {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #4a90e2;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                margin: 20px auto;
+                display: none;
+            }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
 
-    textarea {
-      width: 90%;
-      height: 120px;
-      margin-top: 20px;
-      font-family: monospace;
-      padding: 10px;
-    }
-  </style>
-</head>
+            textarea {
+                width: 90%;
+                height: 120px;
+                margin-top: 20px;
+                font-family: monospace;
+                padding: 10px;
+            }
+        </style>
+    </head>
 
-<body>
+    <body>
+        <header>
+            <h1>Leitner quiz</h1>
+            <div class="header-buttons">
+                <button onclick="presenter.onClickOnExportData();">
+                    ⬇️ Exporter
+                </button>
+                <button onclick="presenter.onClickOnImportData();">
+                    📂 Importer
+                </button>
+            </div>
+        </header>
 
-  <header>
-    <h1>Leitner quiz</h1>
-    <div class="header-buttons">
-      <button onclick="presenter.onClickOnExportData();">⬇️ Exporter</button>
-      <button onclick="presenter.onClickOnImportData();">📂 Importer</button>
-    </div>
-  </header>
+        <div class="container">
+            <div class="loader" id="loader"></div>
+            <div class="message" id="message"></div>
+            <p id="question">
+                Cliquez sur le bouton pour obtenir une question.
+            </p>
 
-  <div class="container">
-	<div class="loader" id="loader"></div>
-    <div class="message" id="message"></div>
-    <p id="question">Cliquez sur le bouton pour obtenir une question.</p>
-	
-    <p id="answer"></p>
-	<p id="queueProgress" style="color:#666; font-size: 0.9rem; margin-top: 10px;"></p>
+            <p id="answer"></p>
+            <p
+                id="queueProgress"
+                style="color: #666; font-size: 0.9rem; margin-top: 10px"
+            ></p>
 
-    <textarea id="tentativeAnswer" placeholder="Brouillon ici..."></textarea><br/>
+            <textarea
+                id="tentativeAnswer"
+                placeholder="Brouillon ici..."
+            ></textarea
+            ><br />
 
-    <button id="generateBtn" onclick="presenter.onClickOnGetQuestion();">🎲 Nouvelle Question</button>
-    <button id="showAnswer" onclick="presenter.onClickOnValidateAnswer();" style="display: none;">👀 Valider Réponse</button>
+            <button
+                id="generateBtn"
+                onclick="presenter.onClickOnGetQuestion();"
+            >
+                🎲 Nouvelle Question
+            </button>
+            <button
+                id="showAnswer"
+                onclick="presenter.onClickOnValidateAnswer();"
+                style="display: none"
+            >
+                👀 Valider Réponse
+            </button>
 
-    <div class="performance" id="performance"></div>
-<br><br>
-    <div class="buttons-group">
-      <button onclick="presenter.onClickOnShowPerformance();">📊 Voir Performances</button>
-      <button onclick="presenter.onClickOnResetPerformanceData();">🔄 Réinitialiser</button>
-    </div>
+            <div class="performance" id="performance"></div>
+            <br /><br />
+            <div class="buttons-group">
+                <button onclick="presenter.onClickOnShowPerformance();">
+                    📊 Voir Performances
+                </button>
+                <button onclick="presenter.onClickOnResetPerformanceData();">
+                    🔄 Réinitialiser
+                </button>
+            </div>
+        </div>
 
-    
-  </div>
+        <footer>&copy; 2025 Leitner-Based Quiz de CyrilleTelmer</footer>
 
-  <footer>
-    &copy; 2025 Leitner-Based Quiz de CyrilleTelmer
-  </footer>
+        <script>
+            const view = {
+                questionEl: document.getElementById('question'),
+                answerEl: document.getElementById('answer'),
+                showAnswerBtn: document.getElementById('showAnswer'),
+                loaderEl: document.getElementById('loader'),
+                messageEl: document.getElementById('message'),
+                performanceEl: document.getElementById('performance'),
+                generateBtn: document.getElementById('generateBtn'),
+                attemptedAnswerTxt: document.getElementById('tentativeAnswer'),
+                progressEl: document.getElementById('queueProgress'),
 
-  <script>
-  const view = {
-    questionEl: document.getElementById("question"),
-    answerEl: document.getElementById("answer"),
-    showAnswerBtn: document.getElementById("showAnswer"),
-    loaderEl: document.getElementById("loader"),
-    messageEl: document.getElementById("message"),
-    performanceEl: document.getElementById("performance"),
-    generateBtn: document.getElementById("generateBtn"),
-    attemptedAnswerTxt: document.getElementById("tentativeAnswer"),
-    progressEl: document.getElementById("queueProgress"),
+                updateQuestion(text) {
+                    this.questionEl.innerText = text;
+                },
 
-    updateQuestion(text) {
-      this.questionEl.innerText = text;
-    },
+                clearAnswerBox() {
+                    this.attemptedAnswerTxt.value = '';
+                },
 
-    clearAnswerBox() {
-      this.attemptedAnswerTxt.value = "";
-    },
+                showLoader(isVisible) {
+                    this.loaderEl.style.display = isVisible ? 'block' : 'none';
+                },
 
-    showLoader(isVisible) {
-      this.loaderEl.style.display = isVisible ? "block" : "none";
-    },
+                enableGenerateButton(enable) {
+                    this.generateBtn.disabled = !enable;
+                },
 
-    enableGenerateButton(enable) {
-      this.generateBtn.disabled = !enable;
-    },
+                toggleShowAnswerBtn(show) {
+                    this.showAnswerBtn.style.display = show
+                        ? 'inline-block'
+                        : 'none';
+                },
 
-    toggleShowAnswerBtn(show) {
-      this.showAnswerBtn.style.display = show ? "inline-block" : "none";
-    },
+                displayMessage(text) {
+                    this.messageEl.innerText = text;
+                    this.messageEl.style.display = 'block';
+                    setTimeout(() => {
+                        this.messageEl.style.display = 'none';
+                    }, 4000);
+                },
 
-    displayMessage(text) {
-      this.messageEl.innerText = text;
-      this.messageEl.style.display = "block";
-      setTimeout(() => {
-        this.messageEl.style.display = "none";
-      }, 4000);
-    },
+                updateProgress(current, total) {
+                    this.progressEl.innerText = `${current} / ${total} réponses enregistrées...`;
+                    if (current === total) {
+                        this.progressEl.innerText +=
+                            ' 📦 Prêt pour correction !';
+                    }
+                },
 
-    updateProgress(current, total) {
-      this.progressEl.innerText = `${current} / ${total} réponses enregistrées...`;
-      if (current === total) {
-        this.progressEl.innerText += " 📦 Prêt pour correction !";
-      }
-    },
+                showPerformanceReport(reportHTML) {
+                    this.performanceEl.innerHTML = reportHTML;
+                },
 
-    showPerformanceReport(reportHTML) {
-      this.performanceEl.innerHTML = reportHTML;
-    },
+                clearPerformance() {
+                    this.performanceEl.innerHTML = '';
+                },
+            };
 
-    clearPerformance() {
-      this.performanceEl.innerHTML = '';
-    }
-  };
+            const presenter = {
+                currentTopic: '',
+                currentAnswer: '',
+                topicProvider: new TopicProvider(),
+                promptIssuer: new PromptIssuer(),
+                storage: null,
+                algorithm: null,
+                aiPartner: new AIPartner(),
+                questionMapper: null,
+                exportingUX: null,
+                feedbackQueue: new FeedbackQueue(2),
 
-  const presenter = {
-    currentTopic: "",
-    currentAnswer: "",
-    topicProvider: new TopicProvider(),
-    promptIssuer: new PromptIssuer(),
-    storage: null,
-    algorithm: null,
-    aiPartner: new AIPartner(),
-    questionMapper: null,
-    exportingUX: null,
-    feedbackQueue: new FeedbackQueue(2),
+                init() {
+                    this.storage = new KnowledgeStorage(
+                        this.topicProvider.topics(),
+                        this.topicProvider.knowledgeId(),
+                    );
+                    this.questionMapper = new QuestionMapper(
+                        this.promptIssuer.responseRegex(),
+                    );
+                    this.algorithm = new LeitnerAlgorithm(this.storage);
+                    this.exportingUX = new ExportingUX(this.storage);
+                    this.exportingUX.setOnImportSuccessCallback(() =>
+                        this.onClickOnShowPerformance(),
+                    );
+                },
 
-    init() {
-	  this.storage = new KnowledgeStorage(this.topicProvider.topics(), this.topicProvider.knowledgeId());
-	  this.questionMapper=new QuestionMapper(this.promptIssuer.responseRegex());
-      this.algorithm = new LeitnerAlgorithm(this.storage);
-      this.exportingUX = new ExportingUX(this.storage);
-      this.exportingUX.setOnImportSuccessCallback(() => this.onClickOnShowPerformance());
-    },
-	
-	onClickOnImportData(){
-		this.exportingUX.importData();
-	},
-	
-	onClickOnExportData(){
-		this.exportingUX.exportData();
-	},
+                onClickOnImportData() {
+                    this.exportingUX.importData();
+                },
 
-    async onClickOnGetQuestion() {
-      view.displayMessage("");
-      view.showLoader(true);
-      view.enableGenerateButton(false);
+                onClickOnExportData() {
+                    this.exportingUX.exportData();
+                },
 
-      this.currentTopic = this.algorithm.getTopicToStudy();
-      const prompt = this.promptIssuer.constructPrompt(this.currentTopic);
+                async onClickOnGetQuestion() {
+                    view.displayMessage('');
+                    view.showLoader(true);
+                    view.enableGenerateButton(false);
 
-      try {
-        const rawDataFromAI = await this.aiPartner.getQuestion(prompt);
-        const resulting = this.questionMapper.map(rawDataFromAI);
+                    this.currentTopic = this.algorithm.getTopicToStudy();
+                    const prompt = this.promptIssuer.constructPrompt(
+                        this.currentTopic,
+                    );
 
-        view.updateQuestion(resulting.question);
-        this.currentAnswer = resulting.answer;
+                    try {
+                        const rawDataFromAI = await this.aiPartner.getQuestion(
+                            prompt,
+                        );
+                        const resulting =
+                            this.questionMapper.map(rawDataFromAI);
 
-        view.toggleShowAnswerBtn(true);
-        view.clearAnswerBox();
-      } catch (err) {
-        console.error("Erreur API :", err);
-        view.updateQuestion("Erreur lors de la génération de la question.");
-        view.displayMessage("Impossible de générer la question.");
-      }
+                        view.updateQuestion(resulting.question);
+                        this.currentAnswer = resulting.answer;
 
-      view.showLoader(false);
-      view.enableGenerateButton(true);
-    },
+                        view.toggleShowAnswerBtn(true);
+                        view.clearAnswerBox();
+                    } catch (err) {
+                        console.error('Erreur API :', err);
+                        view.updateQuestion(
+                            'Erreur lors de la génération de la question.',
+                        );
+                        view.displayMessage(
+                            'Impossible de générer la question.',
+                        );
+                    }
 
-    onClickOnValidateAnswer() {
-      const userAnswer = view.attemptedAnswerTxt.value;
-      this.feedbackQueue.addItem({
-        question: view.questionEl.innerText,
-        correctAnswer: this.currentAnswer,
-        userAnswer,
-        topic: this.currentTopic
-      });
+                    view.showLoader(false);
+                    view.enableGenerateButton(true);
+                },
 
-      view.clearAnswerBox();
-      view.toggleShowAnswerBtn(false);
-      view.updateProgress(this.feedbackQueue.queue.length, this.feedbackQueue.maxSize);
+                onClickOnValidateAnswer() {
+                    const userAnswer = view.attemptedAnswerTxt.value;
+                    this.feedbackQueue.addItem({
+                        question: view.questionEl.innerText,
+                        correctAnswer: this.currentAnswer,
+                        userAnswer,
+                        topic: this.currentTopic,
+                    });
 
-      if (this.feedbackQueue.isFull()) {
-        this.displayFeedbackQueue();
-      } else {
-        view.displayMessage("Réponse enregistrée ! Attendez que la file se remplisse.");
-      }
-    },
+                    view.clearAnswerBox();
+                    view.toggleShowAnswerBtn(false);
+                    view.updateProgress(
+                        this.feedbackQueue.queue.length,
+                        this.feedbackQueue.maxSize,
+                    );
 
-    displayFeedbackQueue() {
-      let html = "<h3>Correction différée</h3><ul>";
-      this.feedbackQueue.getItems().forEach((item, i) => {
-        html += `
+                    if (this.feedbackQueue.isFull()) {
+                        this.displayFeedbackQueue();
+                    } else {
+                        view.displayMessage(
+                            'Réponse enregistrée ! Attendez que la file se remplisse.',
+                        );
+                    }
+                },
+
+                displayFeedbackQueue() {
+                    let html = '<h3>Correction différée</h3><ul>';
+                    this.feedbackQueue.getItems().forEach((item, i) => {
+                        html += `
           <li>
             <strong>Q${i + 1}:</strong> ${item.question}<br/>
-            <em>Votre réponse:</em> ${item.userAnswer || "<i>Aucune</i>"}<br/>
+            <em>Votre réponse:</em> ${item.userAnswer || '<i>Aucune</i>'}<br/>
             <em>IA réponse:</em> ${item.correctAnswer}<br/>
             <div id="confirmationFeedbackPanel${i}">
-              <button onclick="presenter.onClickOnRecordResult('${item.topic}', true, ${i})">✅ Bonne Réponse?</button>
-              <button onclick="presenter.onClickOnRecordResult('${item.topic}', false, ${i})">❌ Mauvaise Réponse?</button>
+              <button onclick="presenter.onClickOnRecordResult('${
+                  item.topic
+              }', true, ${i})">✅ Bonne Réponse?</button>
+              <button onclick="presenter.onClickOnRecordResult('${
+                  item.topic
+              }', false, ${i})">❌ Mauvaise Réponse?</button>
             </div>
             <hr/>
           </li>`;
-      });
-      html += `<button onclick="presenter.onClickOnConfirmFeedback()">aight.</button></ul>`;
-      view.showPerformanceReport(html);
-      this.feedbackQueue.clear();
-      view.displayMessage("Réponses corrigées !");
-    },
+                    });
+                    html += `<button onclick="presenter.onClickOnConfirmFeedback()">aight.</button></ul>`;
+                    view.showPerformanceReport(html);
+                    this.feedbackQueue.clear();
+                    view.displayMessage('Réponses corrigées !');
+                },
 
-    onClickOnConfirmFeedback() {
-      view.clearPerformance();
-    },
+                onClickOnConfirmFeedback() {
+                    view.clearPerformance();
+                },
 
-    onClickOnRecordResult(topic, isCorrect, position) {
-      this.storage.saveData(topic, isCorrect);
-      const panel = document.getElementById("confirmationFeedbackPanel" + position);
-      if (panel) panel.style.display = "none";
-      view.displayMessage("Votre réponse a été enregistrée !");
-    },
+                onClickOnRecordResult(topic, isCorrect, position) {
+                    this.storage.saveData(topic, isCorrect);
+                    const panel = document.getElementById(
+                        'confirmationFeedbackPanel' + position,
+                    );
+                    if (panel) panel.style.display = 'none';
+                    view.displayMessage('Votre réponse a été enregistrée !');
+                },
 
-    onClickOnShowPerformance() {
-      const data = this.storage.getData();
-      let html = "<h3>Performances</h3><ul>";
-      Object.entries(data).forEach(([topic, stats]) => {
-        const total = stats.correct + stats.incorrect;
-        const pct = total === 0 ? 0 : ((stats.correct / total) * 100).toFixed(1);
-        html += `<li><strong>${topic}</strong>: ${stats.correct} / ${total} (${pct}%)</li>`;
-      });
-      html += "</ul>";
-      view.showPerformanceReport(html);
-    },
+                onClickOnShowPerformance() {
+                    const data = this.storage.getData();
+                    let html = '<h3>Performances</h3><ul>';
+                    Object.entries(data).forEach(([topic, stats]) => {
+                        const total = stats.correct + stats.incorrect;
+                        const pct =
+                            total === 0
+                                ? 0
+                                : ((stats.correct / total) * 100).toFixed(1);
+                        html += `<li><strong>${topic}</strong>: ${stats.correct} / ${total} (${pct}%)</li>`;
+                    });
+                    html += '</ul>';
+                    view.showPerformanceReport(html);
+                },
 
-    onClickOnResetPerformanceData() {
-      this.storage.resetPerformanceData();
-      view.clearPerformance();
-      view.displayMessage("Données de performance réinitialisées.");
-    }
-  };
+                onClickOnResetPerformanceData() {
+                    this.storage.resetPerformanceData();
+                    view.clearPerformance();
+                    view.displayMessage(
+                        'Données de performance réinitialisées.',
+                    );
+                },
+            };
 
-  // Init on load
-  presenter.init();
-</script>
-
-</body>
+            // Init on load
+            presenter.init();
+        </script>
+    </body>
 </html>

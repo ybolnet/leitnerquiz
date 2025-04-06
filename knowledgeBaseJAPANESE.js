@@ -1,17 +1,23 @@
-// No export, no private method
 class PromptIssuer {
     constructor() {}
 
-    // Renamed from #onProbability to _onProbability for convention
+    responseRegex() {
+        return /\<UVVFU1RJT04\>(.+)\<\/UVVFU1RJT04\>\s*\<QU5TV0VS\>(.+)\<\/QU5TV0VS\>/;
+    }
+
+    constructPrompt(topic) {
+        const preprompt = 'Tu dois proposer un exercice/une question :';
+        const postPrompt =
+            "Ta proposition doit être sous cette forme:<UVVFU1RJT04> question ou exercice</UVVFU1RJT04><QU5TV0VS>réponse à l'exercice</QU5TV0VS>, et rien d'autre.";
+        const prompt = this._constructPrompt(topic);
+        return `${preprompt} ${prompt} ${postPrompt}`;
+    }
+
     _onProbability(p) {
         return Math.random() < p;
     }
 
-    responseRegex() {
-        return /\<QUESTION\>(.+)\<\/QUESTION\>\s*\<ANSWER\>(.+)\<\/ANSWER\>/;
-    }
-
-    constructPrompt(topic) {
+    _constructPrompt(topic) {
         const familiarTone = this._onProbability(0.1)
             ? 'avec un ton familier, '
             : this._onProbability(0.3)
@@ -42,7 +48,7 @@ class PromptIssuer {
             ? `sur le sujet ${subject}, `
             : '';
 
-        const prompt = `Fais une phrase complexe en japonais ${familiarTone}${feminineTone}${keigo}${weather}${aboutTanakaSan}${onSubject}contenant l'expression: ${topic}, puis donne la traduction en français et pronconciation en romaji sous cette forme : "<QUESTION> [phrase en japonais] </QUESTION> <ANSWER> [traduction et prononciation] </ANSWER>"`;
+        const prompt = `l'exercice doit consister en une phrase complexe en japonais ${familiarTone}${feminineTone}${keigo}${weather}${aboutTanakaSan}${onSubject}contenant l'expression: ${topic}, et la réponse à l'exercice doit consister en la traduction et sa transcription en romaji. `;
 
         return prompt;
     }
